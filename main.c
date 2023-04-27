@@ -42,36 +42,46 @@ int main(){
 
             fopen("alunos.txt", "a");
 
-            alunos[qtd_alunos] = Cadastrar();
+            alunos[qtd_alunos] = Cadastrar(qtd_alunos);
 
-            while(VerificacaoNotas(qtd_alunos) == 0){
-                alunos[qtd_alunos]= Cadastrar();
+            if (strcmp(alunos[qtd_alunos].matricula, "0") == 0){
+                printf("Cadastro cancelado!\n");
+                system("pause");
+                system("cls");
+                continue;
             }
 
-            fclose(arquivo);
+            while(VerificacaoNotas(qtd_alunos) == 0){
+                alunos[qtd_alunos]= Cadastrar(qtd_alunos);
+            }
 
-            AdicionarQuantidadeAlunosArquivo(qtd_alunos);
+            system("pause");
+            system("cls");
         }
 
          if (opcao == 2){
 
-            int erro = ExcluirAluno(qtd_alunos);
+            int erro = ExcluirAluno();
 
             if (erro == 0){
                 printf("Aluno excluido com sucesso!\n");
                 printf("\n");
             }
 
-            fclose(arquivo);
+            system("pause");
+            system("cls");
         }
         
         if (opcao == 3){
 
-            int erro = BuscarAluno(qtd_alunos);
+            int erro = BuscarAluno();
 
             if (erro == 1){
                 printf("Aluno nao encontrado!\n");
             }
+            
+            system("pause");
+            system("cls");
         }
 
         if (opcao == 4){
@@ -81,6 +91,9 @@ int main(){
             if (erro != 0){
                 printf("Nao ha alunos cadastrados!\n");
             }
+
+            system("pause");
+            system("cls");
         }
 
         if (opcao == 5){

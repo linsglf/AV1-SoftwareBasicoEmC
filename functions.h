@@ -134,12 +134,17 @@ int CalcularIdade(int dia, int mes, int ano){
 }
 
 
-aluno Cadastrar(){
+aluno Cadastrar(int qtd_alunos){
     aluno cadastro_aluno;
 
     printf("Digite o nome do aluno: ");
     gets(cadastro_aluno.nome);
     fflush(stdin);
+
+    if (strcmp(cadastro_aluno.nome, "0") == 0){
+        strcpy(cadastro_aluno.matricula, "0\0");
+        return cadastro_aluno;
+    }
 
     printf("Digite a matricula do aluno: ");
     gets(cadastro_aluno.matricula);
@@ -179,6 +184,10 @@ aluno Cadastrar(){
 
     fprintf(arquivo, "| %s | %d | %s | %s | %d/%d/%d | %.2f | %.2f | %.2f | %s |\n", cadastro_aluno.nome, cadastro_aluno.idade, cadastro_aluno.matricula, cadastro_aluno.cpf, cadastro_aluno.dia, cadastro_aluno.mes, cadastro_aluno.ano, cadastro_aluno.nota1, cadastro_aluno.nota2, cadastro_aluno.media, cadastro_aluno.situacao);
     
+    fclose(arquivo);
+
+    AdicionarQuantidadeAlunosArquivo(qtd_alunos);
+
     return cadastro_aluno;
 }
 
@@ -200,8 +209,6 @@ void AdicionarQuantidadeAlunosArquivo(int qtd_alunos){
         fprintf(arquivo_qtd_alunos, "%d", qtd_alunos);
         fclose(arquivo_qtd_alunos);
     }
-
-    printf("Quantidade de alunos: %d", qtd_alunos);
 }
 
 void DecrementarQuantidadeAlunosArquivo(){
@@ -233,7 +240,6 @@ int ExcluirAluno(){
 
     for (int i = 0; i < qtd_alunos; i++){
         fscanf(arquivo, "| %s | %d | %s | %s | %d/%d/%d | %f | %f | %f | %s | ", arquivoVetor[i].nome, &arquivoVetor[i].idade, arquivoVetor[i].matricula, arquivoVetor[i].cpf, &arquivoVetor[i].dia, &arquivoVetor[i].mes, &arquivoVetor[i].ano, &arquivoVetor[i].nota1, &arquivoVetor[i].nota2, &arquivoVetor[i].media, arquivoVetor[i].situacao);
-        printf("Matricula: %s\n", arquivoVetor[i].matricula);
     }
 
     fclose(arquivo);
@@ -244,6 +250,13 @@ int ExcluirAluno(){
     printf("Digite a matricula do aluno que deseja excluir: ");
     gets(matricula);
     fflush(stdin);
+
+    //matricula = "0" volta para o menu
+
+    if (strcmp(matricula, "0") == 0){
+        printf("Voltando para o menu\n");
+        return 1;
+    }
 
 
     for (int i = 0; i < qtd_alunos; i++){
@@ -276,21 +289,37 @@ int ExcluirAluno(){
     return 0;
 }
 
-int BuscarAluno(int qtd_alunos){
+int BuscarAluno(){
+
+    int qtd_alunos;
+    arquivo_qtd_alunos = fopen("qtd_alunos.txt", "r");
+    fscanf(arquivo_qtd_alunos, "%d", &qtd_alunos);
+    fclose(arquivo_qtd_alunos);
+
+    aluno arquivoVetor[qtd_alunos];
+
+    //copiando as matriculas do arquivo para o vetor
+
+    arquivo = fopen("alunos.txt", "r");
+
+    for (int i = 0; i < qtd_alunos; i++){
+        fscanf(arquivo, "| %s | %d | %s | %s | %d/%d/%d | %f | %f | %f | %s | ", arquivoVetor[i].nome, &arquivoVetor[i].idade, arquivoVetor[i].matricula, arquivoVetor[i].cpf, &arquivoVetor[i].dia, &arquivoVetor[i].mes, &arquivoVetor[i].ano, &arquivoVetor[i].nota1, &arquivoVetor[i].nota2, &arquivoVetor[i].media, arquivoVetor[i].situacao);
+    }
+
+    fclose(arquivo);
+
     char matricula[10];
 
     printf("Digite a matricula do aluno que deseja buscar: ");
     gets(matricula);
     fflush(stdin);
 
-    printf("qtd_alunos: %d", qtd_alunos);
-
     for (int i = 0; i < qtd_alunos; i++){
 
-        if (strncmp(matricula, alunos[i].matricula, strlen(matricula)) == 0){
+        if (strncmp (arquivoVetor[i].matricula, matricula, strlen(matricula)) == 0){
+            printf("| %s | %d | %s | %s | %d/%d/%d | %.2f | %.2f | %.2f | %s |\n", arquivoVetor[i].nome, arquivoVetor[i].idade, arquivoVetor[i].matricula, arquivoVetor[i].cpf, arquivoVetor[i].dia, arquivoVetor[i].mes, arquivoVetor[i].ano, arquivoVetor[i].nota1, arquivoVetor[i].nota2, arquivoVetor[i].media, arquivoVetor[i].situacao);
             printf("Aluno encontrado!\n");
-            printf("| %s | %.2f | %.2f | %.2f | %s |\n", alunos[i].nome, alunos[i].nota1, alunos[i].nota2, alunos[i].media, alunos[i].situacao);
-        
+
             return 0;
         }
     }
