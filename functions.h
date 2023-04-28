@@ -169,6 +169,12 @@ aluno Cadastrar(int qtd_alunos){
     printf("Digite a nota 2 do aluno: ");
     scanf("%f", &cadastro_aluno.nota2);
     fflush(stdin);
+
+    if (cadastro_aluno.nota1 < 0 || cadastro_aluno.nota1 > 10 || cadastro_aluno.nota2 < 0 || cadastro_aluno.nota2 > 10){
+        printf("Nota invalida. A nota deve ser entre 0 e 10.\n");
+        strcpy(cadastro_aluno.matricula, "0\0");
+        return cadastro_aluno;
+    }
     
     cadastro_aluno.media = (cadastro_aluno.nota1 + cadastro_aluno.nota2) / 2;
 
@@ -325,26 +331,6 @@ int BuscarAluno(){
     }
 
     return 1;
-}
-
-int VerificacaoNotas(int qtd_alunos){
-
-    if(alunos[qtd_alunos].nota1 >= 0 && alunos[qtd_alunos].nota1 <= 10 && alunos[qtd_alunos].nota2 >= 0 && alunos[qtd_alunos].nota2 <= 10){
-        printf("Aluno cadastrado com sucesso!\n");
-        printf("| %s | %s | %.2f | %.2f |\n", alunos[qtd_alunos].nome, alunos[qtd_alunos].matricula ,alunos[qtd_alunos].nota1, alunos[qtd_alunos].nota2);
-
-        return 1;
-    }else if (alunos[qtd_alunos].nota1 > 10 || alunos[qtd_alunos].nota1 < 0){
-        printf("Nota 1 invalida!\n");
-        printf("Tente Novamente!\n");
-
-        return 0;
-    }else if (alunos[qtd_alunos].nota2 > 10 || alunos[qtd_alunos].nota2 < 0){
-        printf("Nota 2 invalida!\n");
-        printf("Tente Novamente!\n");
-
-        return 0;
-    }
 }
 
 int ImprimirRelatorioArquivo(){

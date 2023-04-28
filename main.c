@@ -58,9 +58,7 @@ int main(){
                 continue;
             }
 
-            while(VerificacaoNotas(qtd_alunos) == 0){
-                alunos[qtd_alunos]= Cadastrar(qtd_alunos);
-            }
+            printf("Aluno cadastrado com sucesso!\n");
 
             system("pause");
             system("cls");
