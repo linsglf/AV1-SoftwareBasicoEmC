@@ -377,6 +377,88 @@ int ImprimirRelatorioArquivo(){
     return 0;
 }
 
+int AlterarAluno(){
+
+    int qtd_alunos;
+    arquivo_qtd_alunos = fopen("qtd_alunos.txt", "r");
+    fscanf(arquivo_qtd_alunos, "%d", &qtd_alunos);
+    fclose(arquivo_qtd_alunos);
+
+    aluno arquivoVetor[qtd_alunos];
+
+    //copiando as matriculas do arquivo para o vetor
+
+    arquivo = fopen("alunos.txt", "r");
+
+    for (int i = 0; i < qtd_alunos; i++){
+        fscanf(arquivo, "| %s | %d | %s | %s | %d/%d/%d | %f | %f | %f | %s | ", arquivoVetor[i].nome, &arquivoVetor[i].idade, arquivoVetor[i].matricula, arquivoVetor[i].cpf, &arquivoVetor[i].dia, &arquivoVetor[i].mes, &arquivoVetor[i].ano, &arquivoVetor[i].nota1, &arquivoVetor[i].nota2, &arquivoVetor[i].media, arquivoVetor[i].situacao);
+    }
+
+    fclose(arquivo);
+
+    char matricula[10];
+
+    printf("Digite a matricula do aluno que deseja alterar: ");
+    gets(matricula);
+    fflush(stdin);
+
+    for (int i = 0; i < qtd_alunos; i++){
+
+        if (strncmp (arquivoVetor[i].matricula, matricula, strlen(matricula)) == 0){
+            printf("| %s | %d | %s | %s | %d/%d/%d | %.2f | %.2f | %.2f | %s |\n", arquivoVetor[i].nome, arquivoVetor[i].idade, arquivoVetor[i].matricula, arquivoVetor[i].cpf, arquivoVetor[i].dia, arquivoVetor[i].mes, arquivoVetor[i].ano, arquivoVetor[i].nota1, arquivoVetor[i].nota2, arquivoVetor[i].media, arquivoVetor[i].situacao);
+            printf("Aluno encontrado!\n");
+
+            printf("Digite o novo nome do aluno: ");
+            gets(arquivoVetor[i].nome);
+            fflush(stdin);
+            printf("Digite a nova matricula do aluno: ");   
+            gets(arquivoVetor[i].matricula);
+            fflush(stdin);
+            printf("Digite a nova data de nascimento do aluno: ");
+            scanf("%d/%d/%d", &arquivoVetor[i].dia, &arquivoVetor[i].mes, &arquivoVetor[i].ano);
+            fflush(stdin);
+
+            printf("Digite o cpf do aluno: ");
+            gets(arquivoVetor[i].cpf);
+            fflush(stdin);
+            while (validar_cpf(arquivoVetor[i].cpf) == 0){
+                printf("Digite o cpf do aluno: ");
+                gets(arquivoVetor[i].cpf);
+                fflush(stdin);
+            }
+
+            printf("Digite a nova nota 1 do aluno: ");
+            scanf("%f", &alunos[i].nota1);
+            fflush(stdin);
+            printf("Digite a nova nota 2 do aluno: ");
+            scanf("%f", &alunos[i].nota2);
+            fflush(stdin);
+
+            arquivoVetor[i].media = (alunos[i].nota1 + alunos[i].nota2) / 2;
+
+            if (arquivoVetor[i].media >= 6){
+                strcpy(arquivoVetor[i].situacao, "Aprovado");
+            }else if (arquivoVetor[i].media < 6 && arquivoVetor[i].media >= 4){
+                strcpy(arquivoVetor[i].situacao, "Recuperacao");
+            }else{
+                strcpy(arquivoVetor[i].situacao, "Reprovado");
+            };
+
+            arquivoVetor[i].idade = CalcularIdade(arquivoVetor[i].dia, arquivoVetor[i].mes, arquivoVetor[i].ano);
+            
+            arquivo = fopen("alunos.txt", "w");
+
+            for (int i = 0; i < qtd_alunos; i++){
+                fprintf(arquivo, "| %s | %d | %s | %s | %d/%d/%d | %.2f | %.2f | %.2f | %s |\n", arquivoVetor[i].nome, arquivoVetor[i].idade, arquivoVetor[i].matricula, arquivoVetor[i].cpf, arquivoVetor[i].dia, arquivoVetor[i].mes, arquivoVetor[i].ano, arquivoVetor[i].nota1, arquivoVetor[i].nota2, arquivoVetor[i].media, arquivoVetor[i].situacao);
+            }
+
+            fclose(arquivo);
+
+            return 0;
+        }
+    }
+}
+
 void liberarMemoria(void){
     free(alunos);
 }   

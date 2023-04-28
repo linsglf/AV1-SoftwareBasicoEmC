@@ -34,8 +34,15 @@ int main(){
         scanf("%d", &opcao);
         fflush(stdin);
 
-        if (qtd_alunos >= 5){
-            alunos = realloc(alunos, sizeof(aluno) * (qtd_alunos + 1));
+
+        int quantidade_alunos;
+        arquivo_qtd_alunos = fopen("qtd_alunos.txt", "r");
+        fscanf(arquivo_qtd_alunos, "%d", &quantidade_alunos);
+        fclose(arquivo_qtd_alunos);
+
+
+        if (quantidade_alunos >= 5){
+            alunos = realloc(alunos, sizeof(aluno) * (quantidade_alunos + 1));
         }
 
         if (opcao == 1){
@@ -97,6 +104,21 @@ int main(){
         }
 
         if (opcao == 5){
+
+            int erro = AlterarAluno();
+
+            if (erro != 0){
+                printf("Aluno nao encontrado!\n");
+            }
+
+            
+
+            system("pause");
+            system("cls");   
+
+        }
+
+        if (opcao == 6){
             liberarMemoria();
             printf("Saindo...\n");
             break;
@@ -111,7 +133,7 @@ int main(){
 }
 
 void menu(){
-    printf("1 - Incluir aluno\n2 - Excluir Aluno\n3 - Buscar Aluno\n4 - Relatorio de Notas\n5 - Sair\n");
+    printf("1 - Incluir aluno\n2 - Excluir Aluno\n3 - Buscar Aluno\n4 - Relatorio de Notas\n5 - Alterar aluno\n6 - Sair\n");
     printf("\nDigite a opcao desejada: ");
 
     return;
