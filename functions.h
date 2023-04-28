@@ -114,20 +114,20 @@ int validar_cpf(char* cpf) {
     return 1;
 }
 
-int CalcularIdade(int dia, int mes, int ano){
+int CalcularIdade(int dia, int mes, int ano) {
 
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
+    int ano_atual = tm.tm_year + 1900;
     int mes_atual = tm.tm_mon + 1;
+    int dia_atual = tm.tm_mday;
 
-    int idade;
+    int idade = ano_atual - ano;
 
-    if (mes_atual == mes && dia <= tm.tm_mday){
-            idade = tm.tm_year + 1900 - ano;
-    }else if (mes_atual > mes){
-            idade = tm.tm_year + 1900 - ano;
-    }else if (mes_atual <= mes && dia < tm.tm_mday){
-            idade = tm.tm_year + 1900 - ano - 1;
+    if (mes_atual < mes) {
+        idade--;
+    } else if (mes_atual == mes && dia_atual < dia) {
+        idade--;
     }
 
     return idade;
@@ -428,13 +428,24 @@ int AlterarAluno(){
             }
 
             printf("Digite a nova nota 1 do aluno: ");
-            scanf("%f", &alunos[i].nota1);
+            scanf("%f", &arquivoVetor[i].nota1);
             fflush(stdin);
             printf("Digite a nova nota 2 do aluno: ");
-            scanf("%f", &alunos[i].nota2);
+            scanf("%f", &arquivoVetor[i].nota2);
             fflush(stdin);
+            
+            while (arquivoVetor[i].nota1 < 0 || arquivoVetor[i].nota1 > 10 || arquivoVetor[i].nota2 < 0 || arquivoVetor[i].nota2 > 10)
+            {
+                printf("Nota invalida!\nTente novamente!\n");
+                printf("Digite a nova nota 1 do aluno: ");
+                scanf("%f", &arquivoVetor[i].nota1);
+                fflush(stdin);
+                printf("Digite a nova nota 2 do aluno: ");
+                scanf("%f", &arquivoVetor[i].nota2);
+                fflush(stdin);
+            }
 
-            arquivoVetor[i].media = (alunos[i].nota1 + alunos[i].nota2) / 2;
+            arquivoVetor[i].media = (arquivoVetor[i].nota1 + arquivoVetor[i].nota2 ) / 2;
 
             if (arquivoVetor[i].media >= 6){
                 strcpy(arquivoVetor[i].situacao, "Aprovado");
@@ -446,17 +457,21 @@ int AlterarAluno(){
 
             arquivoVetor[i].idade = CalcularIdade(arquivoVetor[i].dia, arquivoVetor[i].mes, arquivoVetor[i].ano);
             
-            arquivo = fopen("alunos.txt", "w");
-
-            for (int i = 0; i < qtd_alunos; i++){
-                fprintf(arquivo, "| %s | %d | %s | %s | %d/%d/%d | %.2f | %.2f | %.2f | %s |\n", arquivoVetor[i].nome, arquivoVetor[i].idade, arquivoVetor[i].matricula, arquivoVetor[i].cpf, arquivoVetor[i].dia, arquivoVetor[i].mes, arquivoVetor[i].ano, arquivoVetor[i].nota1, arquivoVetor[i].nota2, arquivoVetor[i].media, arquivoVetor[i].situacao);
-            }
-
-            fclose(arquivo);
-
-            return 0;
+            break;
+        }else if (i == qtd_alunos - 1){
+            return 1;
         }
     }
+
+    arquivo = fopen("alunos.txt", "w");
+
+    for (int i = 0; i < qtd_alunos; i++){
+        fprintf(arquivo, "| %s | %d | %s | %s | %d/%d/%d | %.2f | %.2f | %.2f | %s |\n", arquivoVetor[i].nome, arquivoVetor[i].idade, arquivoVetor[i].matricula, arquivoVetor[i].cpf, arquivoVetor[i].dia, arquivoVetor[i].mes, arquivoVetor[i].ano, arquivoVetor[i].nota1, arquivoVetor[i].nota2, arquivoVetor[i].media, arquivoVetor[i].situacao);
+    }
+
+    fclose(arquivo);
+
+    return 0;
 }
 
 void liberarMemoria(void){

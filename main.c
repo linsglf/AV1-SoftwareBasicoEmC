@@ -107,11 +107,11 @@ int main(){
 
             int erro = AlterarAluno();
 
-            if (erro != 0){
+            if (erro == 0){
+                printf("Aluno alterado com sucesso\n");
+            }else{
                 printf("Aluno nao encontrado!\n");
             }
-
-            
 
             system("pause");
             system("cls");   
